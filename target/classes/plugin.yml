@@ -1,0 +1,14 @@
+name: BattleRoyale
+version: '1.0-SNAPSHOT'
+main: me.edstorm17.battleroyale.BattleRoyale
+api-version: '1.21'
+commands:
+  match:
+    usage: /<command>
+  items:
+    usage: /<command>
+  vehicle:
+    usage: /<command>
+  stuff:
+    usage: /<command>
+
