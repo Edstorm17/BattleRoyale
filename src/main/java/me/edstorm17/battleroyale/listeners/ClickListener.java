@@ -22,6 +22,7 @@ public class ClickListener implements Listener {
         } else if (event.hasItem()) {
             Item item = Item.get(event.getItem());
             if (item != null && item.getItem() instanceof Ability ability) {
+                event.setCancelled(true);
                 ability.onClick(event);
             }
         }

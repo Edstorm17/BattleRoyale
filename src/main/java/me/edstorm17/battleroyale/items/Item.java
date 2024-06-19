@@ -1,6 +1,7 @@
 package me.edstorm17.battleroyale.items;
 
 import me.edstorm17.battleroyale.items.armor.Foulard;
+import me.edstorm17.battleroyale.items.armor.Gay;
 import me.edstorm17.battleroyale.items.weapon.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,11 +17,16 @@ public enum Item {
     RAYGUN(new Raygun()),
     STEALER(new Stealer()),
     SEED(new Seed()),
+    SNAPFLASH(new Snapflash()),
+    SERINGUE(new Seringue()),
+    GAY(new Gay()),
 
     FIGHTER(new BaseItem("fighter", Material.OAK_BOAT, ChatColor.RED + "Fighter")),
     BOMBER(new BaseItem("bomber", Material.ACACIA_BOAT, ChatColor.RED + "Bomber")),
     SPECIAL(new BaseItem("special", Material.BAMBOO_RAFT, ChatColor.DARK_RED + "Special")),
     ;
+
+    public static final Menu MENU = new Menu();
 
     private final BaseItem item;
 
@@ -32,7 +38,7 @@ public enum Item {
         return item;
     }
 
-    private static String getId(ItemStack itemStack) {
+    public static String getId(ItemStack itemStack) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) return "";
         return meta.getPersistentDataContainer().get(BaseItem.idKey, PersistentDataType.STRING);

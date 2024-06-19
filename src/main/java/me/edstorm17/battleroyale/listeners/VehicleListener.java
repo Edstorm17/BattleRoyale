@@ -53,12 +53,14 @@ public class VehicleListener implements Listener {
             String id = Item.get(event.getItem()).getItem().getId();
             Location loc = event.getClickedBlock().getLocation().add(0.5, 1, 0.5);
             float yaw = event.getPlayer().getLocation().getYaw();
+            boolean isVehicle = true;
             switch (id) {
                 case "fighter" -> new Fighter(loc).a(yaw, 0);
                 case "bomber" -> new Bomber(loc).a(yaw, 0);
                 case "special" -> new Special(loc).mount(event.getPlayer());
+                default -> isVehicle = false;
             }
-            event.getPlayer().getInventory().setItemInMainHand(null);
+            if (isVehicle) event.getPlayer().getInventory().setItemInMainHand(null);
         }
     }
 
