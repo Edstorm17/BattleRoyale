@@ -42,7 +42,8 @@ public class BlockUtils {
             }
         }
 
-        Bukkit.getLogger().info("Replaced " + "x" + " blocks.");
+		int volume = (int) Math.abs(endX - startX + 1) * Math.abs(endY - startY + 1) * Math.abs(endZ - startZ + 1);
+        Bukkit.getLogger().info("Replaced " + volume + " blocks.");
         return from;
     }
 
