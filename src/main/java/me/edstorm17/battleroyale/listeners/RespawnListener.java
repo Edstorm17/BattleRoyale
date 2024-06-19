@@ -2,7 +2,6 @@ package me.edstorm17.battleroyale.listeners;
 
 import me.edstorm17.battleroyale.Battle;
 import me.edstorm17.battleroyale.BattleStage;
-import me.edstorm17.battleroyale.ScoreManager;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -20,9 +19,9 @@ public class RespawnListener implements Listener {
                 if (active.getCurrentStage() == BattleStage.WAR) {
                     event.setRespawnLocation(active.getSpawnLocation());
                 } else {
-                    if (ScoreManager.red.hasEntry(event.getPlayer().getName())) {
+                    if (Battle.red.hasEntry(event.getPlayer().getName())) {
                         event.setRespawnLocation(active.getRedSpawnLocation());
-                    } else if (ScoreManager.blue.hasEntry(event.getPlayer().getName())) {
+                    } else if (Battle.blue.hasEntry(event.getPlayer().getName())) {
                         event.setRespawnLocation(active.getBlueSpawnLocation());
                     } else {
                         event.setRespawnLocation(active.getSpawnLocation());

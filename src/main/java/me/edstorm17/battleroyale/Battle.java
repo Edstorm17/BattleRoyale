@@ -7,10 +7,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.Criteria;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.*;
 
 import java.io.File;
 import java.time.Duration;
@@ -32,12 +29,30 @@ public class Battle {
 
     private BattleStage currentStage;
 
-    private final Scoreboard scoreboard;
-    private final Objective objective;
+    private static final Scoreboard scoreboard;
+    private static final Objective objective;
 
     private Location spawnLocation;
     private Location blueSpawnLocation;
     private Location redSpawnLocation;
+
+    public static final Team blue;
+    public static final Team red;
+
+    static {
+        scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        objective = scoreboard.registerNewObjective("battle", Criteria.DUMMY, "Battle");
+        objective.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "BATTLE");
+
+        blue = scoreboard.registerNewTeam("blue");
+        red = scoreboard.registerNewTeam("red");
+        blue.setColor(ChatColor.BLUE);
+        red.setColor(ChatColor.RED);
+        blue.setDisplayName(ChatColor.BLUE + "Blue");
+        red.setDisplayName(ChatColor.RED + "Red");
+        blue.setAllowFriendlyFire(false);
+        red.setAllowFriendlyFire(false);
+    }
 
     public Map<Location, BlockData> blocks;
 
@@ -45,10 +60,6 @@ public class Battle {
         this.type = type;
         this.worldType = worldType;
         this.wall = wall;
-
-        scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        objective = scoreboard.registerNewObjective("battle", Criteria.DUMMY, "Battle");
-        objective.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "BATTLE");
     }
 
     private BukkitTask tick;
@@ -70,13 +81,10 @@ public class Battle {
             switch (type) {
                 case TEAMS -> {
                     this.currentStage = BattleStage.WALL;
-                    if (random.nextInt(2) == 0) {
-                        ScoreManager.blue.addEntry(player.getName());
-                        player.teleport(blueSpawnLocation);
-                    } else {
-                        ScoreManager.red.addEntry(player.getName());
-                        player.teleport(redSpawnLocation);
-                    }
+                    if (blue.hasEntry(player.getName()))
+                        player.teleport(getBlueSpawnLocation());
+                    else if (red.hasEntry(player.getName()))
+                        player.teleport(getRedSpawnLocation());
                 }
                 case SOLO -> {
                     this.currentStage = BattleStage.WAR;
@@ -119,12 +127,6 @@ public class Battle {
 
         System.out.println("Deleted old world.");
 
-        for (String s : ScoreManager.red.getEntries()) {
-            ScoreManager.red.removeEntry(s);
-        }
-        for (String s : ScoreManager.blue.getEntries()) {
-            ScoreManager.blue.removeEntry(s);
-        }
         scoreboard.clearSlot(DisplaySlot.SIDEBAR);
     }
 
@@ -282,5 +284,19 @@ public class Battle {
 
     public BattleStage getCurrentStage() {
         return currentStage;
+    }
+
+    public static void joinBlueTeam(Player player) {
+        if (red.hasEntry(player.getName()))
+            red.removeEntry(player.getName());
+
+        blue.addEntry(player.getName());
+    }
+
+    public static void joinRedTeam(Player player) {
+        if (blue.hasEntry(player.getName()))
+            blue.removeEntry(player.getName());
+
+        red.addEntry(player.getName());
     }
 }

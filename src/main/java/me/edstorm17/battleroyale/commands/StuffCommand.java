@@ -27,12 +27,16 @@ public class StuffCommand implements CommandExecutor  {
             ItemMeta pantsMeta = pants.getItemMeta();
             ItemStack shoes = new ItemStack(Material.NETHERITE_BOOTS);
             ItemMeta shoesMeta = shoes.getItemMeta();
+            ItemStack epee = new ItemStack(Material.NETHERITE_SWORD);
+            ItemMeta epeeMeta = epee.getItemMeta();
 
 
             bodyMeta.addEnchant( Enchantment.PROTECTION, 6, true);
             helmetMeta.addEnchant( Enchantment.PROTECTION, 6, true);
             pantsMeta.addEnchant( Enchantment.PROTECTION, 6, true);
             shoesMeta.addEnchant( Enchantment.PROTECTION, 6, true );
+            epeeMeta.addEnchant(Enchantment.SHARPNESS,6,true);
+
 
 
             bodyMeta.setUnbreakable(true);
@@ -46,7 +50,7 @@ public class StuffCommand implements CommandExecutor  {
             pants.setItemMeta(bodyMeta);
             shoes.setItemMeta(bodyMeta);
 
-            player.getInventory().addItem( new ItemStack(Material.NETHERITE_SWORD), new ItemStack(Material.END_CRYSTAL, 64), new ItemStack(Material.OBSIDIAN, 64), new ItemStack(Material.GOLDEN_APPLE, 64));
+            player.getInventory().addItem( epee, new ItemStack(Material.END_CRYSTAL, 64), new ItemStack(Material.OBSIDIAN, 64), new ItemStack(Material.GOLDEN_APPLE, 64));
             player.getEquipment().setItemInOffHand(new ItemStack(Material.TOTEM_OF_UNDYING, 10));
             player.getEquipment().setHelmet(helmet);
             player.getEquipment().setBoots(shoes);

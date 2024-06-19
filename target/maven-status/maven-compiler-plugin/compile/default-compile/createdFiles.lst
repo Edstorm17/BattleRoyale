@@ -28,7 +28,6 @@ me\edstorm17\battleroyale\BattleRoyale.class
 me\edstorm17\battleroyale\items\Item.class
 me\edstorm17\battleroyale\listeners\InventoryListener.class
 me\edstorm17\battleroyale\commands\BattleCommand.class
-me\edstorm17\battleroyale\ScoreManager.class
 me\edstorm17\battleroyale\items\Hittable.class
 me\edstorm17\battleroyale\listeners\RespawnListener.class
 me\edstorm17\battleroyale\items\Menu.class

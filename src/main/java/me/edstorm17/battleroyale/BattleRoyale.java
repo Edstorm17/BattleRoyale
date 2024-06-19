@@ -45,8 +45,6 @@ public final class BattleRoyale extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             Injector.injectPlayer(player);
         }
-
-        ScoreManager.init();
     }
 
     @Override

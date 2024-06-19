@@ -21,7 +21,7 @@ public class Stealer extends BaseItem implements Ability, Hittable {
     public Stealer() {
         super(
                 "stealer",
-                Material.WARPED_FENCE,
+                Material.MACE,
                 "mouahha"
         );
     }

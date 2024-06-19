@@ -7,6 +7,7 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Bat;
 import org.bukkit.entity.Player;
 
 public class BattleCommand implements CommandExecutor {
@@ -27,6 +28,9 @@ public class BattleCommand implements CommandExecutor {
             if (Battle.getActive().getCurrentStage() != BattleStage.DONE)
                 Battle.getActive().finish();
             Battle.getActive().exit();
+        } else if (args[0].equals("team") && args.length == 2 && sender instanceof Player player) {
+            if (args[1].equals("blue")) Battle.joinBlueTeam(player);
+            else if (args[1].equals("red")) Battle.joinRedTeam(player);
         } else {
             Battle battle = new Battle(BattleType.valueOf(args[0].toUpperCase()), WorldType.NORMAL, 30*1000L);
             battle.start();
