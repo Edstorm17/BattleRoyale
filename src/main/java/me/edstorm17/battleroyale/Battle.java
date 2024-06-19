@@ -1,6 +1,8 @@
 package me.edstorm17.battleroyale;
 
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
@@ -25,7 +27,10 @@ public class Battle {
 
     private long start;
     private final BattleType type;
+    private final WorldType worldType;
     private final long wall;
+
+    private BattleStage currentStage;
 
     private final Scoreboard scoreboard;
     private final Objective objective;
@@ -36,8 +41,9 @@ public class Battle {
 
     public Map<Location, BlockData> blocks;
 
-    public Battle(BattleType type, long wall) {
+    public Battle(BattleType type, WorldType worldType, long wall) {
         this.type = type;
+        this.worldType = worldType;
         this.wall = wall;
 
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -47,13 +53,23 @@ public class Battle {
 
     private BukkitTask tick;
 
+    public void start() {
+        this.start(Bukkit.getOnlinePlayers());
+    }
+
     public void start(Collection<? extends Player> players) {
+        if (Battle.getActive() != null) {
+            Battle.getActive().finish();
+            Battle.getActive().exit();
+        }
+
         active = this;
         createWorld();
 
         for (Player player : players) {
             switch (type) {
                 case TEAMS -> {
+                    this.currentStage = BattleStage.WALL;
                     if (random.nextInt(2) == 0) {
                         ScoreManager.blue.addEntry(player.getName());
                         player.teleport(blueSpawnLocation);
@@ -62,9 +78,13 @@ public class Battle {
                         player.teleport(redSpawnLocation);
                     }
                 }
-                case SOLO -> player.teleport(spawnLocation);
+                case SOLO -> {
+                    this.currentStage = BattleStage.WAR;
+                    player.teleport(spawnLocation);
+                }
             }
             player.setScoreboard(scoreboard);
+            clearModifiers(player, Attribute.GENERIC_MAX_HEALTH);
         }
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
@@ -73,11 +93,14 @@ public class Battle {
     }
 
     public void finish() {
-        tick.cancel();
-        active = null;
+        if (this.tick != null)
+            tick.cancel();
+        this.currentStage = BattleStage.DONE;
     }
 
     public void exit() {
+        active = null;
+
         World wait = Bukkit.getWorld("world");
         assert wait != null;
         Location loc = wait.getSpawnLocation();
@@ -102,6 +125,7 @@ public class Battle {
         for (String s : ScoreManager.blue.getEntries()) {
             ScoreManager.blue.removeEntry(s);
         }
+        scoreboard.clearSlot(DisplaySlot.SIDEBAR);
     }
 
     private String latest;
@@ -109,15 +133,28 @@ public class Battle {
 
     private void tick() {
         long time;
-        if (!wallDropped && System.currentTimeMillis() - start >= wall) {
-            onWallDrop();
-            wallDropped = true;
+        switch (this.type) {
+            case TEAMS -> {
+                if (!wallDropped && System.currentTimeMillis() - start >= wall) {
+                    onWallDrop();
+                    wallDropped = true;
+                }
+                if (!wallDropped) {
+                    time = (start + wall) - System.currentTimeMillis();
+                } else {
+                    time = System.currentTimeMillis() - (start + wall);
+                }
+            }
+            case SOLO -> {
+                if (!wallDropped) {
+                    shrink();
+                    wallDropped = true;
+                }
+                time = System.currentTimeMillis() - start;
+            }
+            default -> time = 0L;
         }
-        if (!wallDropped) {
-            time = (start + wall) - System.currentTimeMillis();
-        } else {
-            time = System.currentTimeMillis() - (start + wall);
-        }
+
 
         Duration d = Duration.ofMillis(time);
         int minutes = d.toMinutesPart();
@@ -125,14 +162,18 @@ public class Battle {
         if (latest != null) {
             scoreboard.resetScores(latest);
         }
-        latest = minutes + ":" + seconds;
-        objective.getScore(latest).setScore(10);
+        latest = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+        objective.getScore(latest).setScore(0);
     }
 
     private void onWallDrop() {
         BlockUtils.fill(blocks);
-        gameWorld.getWorldBorder().setSize(9, TimeUnit.MINUTES, 5);
+        shrink();
+        this.currentStage = BattleStage.WAR;
+    }
 
+    private void shrink() {
+        gameWorld.getWorldBorder().setSize(21, TimeUnit.MINUTES, 5);
     }
 
     private void createWorld() {
@@ -159,13 +200,14 @@ public class Battle {
         System.out.println("Creating new world...");
 
         WorldCreator wc = new WorldCreator(worldName);
+        wc.type(this.worldType);
         wc.seed(random.nextLong());
         gameWorld = Bukkit.createWorld(wc);
 
         assert gameWorld != null;
         gameWorld.setGameRule(GameRule.DO_MOB_SPAWNING, false);
         gameWorld.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
-        gameWorld.getWorldBorder().setCenter(0, 0);
+        gameWorld.getWorldBorder().setCenter(0.5, 0.5);
         gameWorld.getWorldBorder().setSize(201);
 
         Block def = gameWorld.getHighestBlockAt(0, 0);
@@ -181,9 +223,9 @@ public class Battle {
             case SOLO -> def.setType(Material.BEDROCK);
         }
 
-        spawnLocation = def.getLocation().add(0.5, 1, 0.5);
-        blueSpawnLocation = blue.getLocation().add(0.5, 1, 0.5);
-        redSpawnLocation = red.getLocation().add(0.5, 1, 0.5);
+        getSpawnLocation();
+        getBlueSpawnLocation();
+        getRedSpawnLocation();
     }
 
     @SuppressWarnings("all")
@@ -195,6 +237,12 @@ public class Battle {
             }
         }
         file.delete();
+    }
+
+    public static void clearModifiers(Player player, Attribute attribute) {
+        for (AttributeModifier modifier : player.getAttribute(attribute).getModifiers()) {
+            player.getAttribute(attribute).removeModifier(modifier);
+        }
     }
 
     public long getStart() {
@@ -214,14 +262,25 @@ public class Battle {
     }
 
     public Location getSpawnLocation() {
+//        if (!spawnLocation.add(0, 1, 0).getBlock().isPassable() || !spawnLocation.add(0, 2, 0).getBlock().isPassable())
+        spawnLocation = gameWorld.getHighestBlockAt(0, 0).getLocation().add(0.5, 1, 0.5);
         return spawnLocation;
     }
 
     public Location getBlueSpawnLocation() {
+//        if (!blueSpawnLocation.add(0, 1, 0).getBlock().isPassable() || !blueSpawnLocation.add(0, 2, 0).getBlock().isPassable())
+        blueSpawnLocation = gameWorld.getHighestBlockAt(0, -50).getLocation().add(0.5, 1, 0.5);
         return blueSpawnLocation;
     }
 
     public Location getRedSpawnLocation() {
+//        if (!redSpawnLocation.add(0, 1, 0).getBlock().isPassable() || !redSpawnLocation.add(0, 2, 0).getBlock().isPassable())
+        redSpawnLocation = gameWorld.getHighestBlockAt(0, 50).getLocation().add(0.5, 1, 0.5);
+        redSpawnLocation.setYaw(180f);
         return redSpawnLocation;
+    }
+
+    public BattleStage getCurrentStage() {
+        return currentStage;
     }
 }

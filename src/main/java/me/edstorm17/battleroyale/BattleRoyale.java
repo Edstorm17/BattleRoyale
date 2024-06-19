@@ -1,13 +1,12 @@
 package me.edstorm17.battleroyale;
 
-import me.edstorm17.battleroyale.commands.ItemsCommand;
-import me.edstorm17.battleroyale.commands.MatchCommand;
-import me.edstorm17.battleroyale.commands.StuffCommand;
-import me.edstorm17.battleroyale.commands.VehicleCommand;
+import me.edstorm17.battleroyale.commands.*;
 import me.edstorm17.battleroyale.items.Item;
 import me.edstorm17.battleroyale.items.Passive;
 import me.edstorm17.battleroyale.listeners.*;
+import me.edstorm17.battleroyale.ui.GUIListener;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -28,14 +27,17 @@ public final class BattleRoyale extends JavaPlugin {
     public void onEnable() {
         getCommand("items").setExecutor(new ItemsCommand());
         getCommand("vehicle").setExecutor(new VehicleCommand());
-        getCommand("match").setExecutor(new MatchCommand());
+        getCommand("battle").setExecutor(new BattleCommand());
         getCommand("stuff").setExecutor(new StuffCommand());
+        getCommand("i").setExecutor(new ItemCommand());
+        getCommand("kit").setExecutor(new KitCommand());
         getServer().getPluginManager().registerEvents(new ClickListener(), this);
         getServer().getPluginManager().registerEvents(new HitListener(), this);
         getServer().getPluginManager().registerEvents(new VehicleListener(), this);
         getServer().getPluginManager().registerEvents(new Injector(), this);
         getServer().getPluginManager().registerEvents(new InventoryListener(), this);
         getServer().getPluginManager().registerEvents(new RespawnListener(), this);
+        getServer().getPluginManager().registerEvents(new GUIListener(), this);
 
         Bukkit.getScheduler().runTaskTimer(this, this::second, 0, 20);
         Bukkit.getScheduler().runTaskTimer(this, this::tick, 0, 1);
@@ -59,8 +61,10 @@ public final class BattleRoyale extends JavaPlugin {
     }
 
     private void second() {
-        for (Entity entity : Bukkit.getWorld("world").getEntities()) {
-            if (entity instanceof Arrow arrow && arrow.isInBlock()) entity.remove();
+        for (World world : Bukkit.getWorlds()) {
+            for (Entity entity : world.getEntities()) {
+                if (entity instanceof Arrow arrow && arrow.isInBlock()) entity.remove();
+            }
         }
     }
 

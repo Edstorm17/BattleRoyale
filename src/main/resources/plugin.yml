@@ -3,7 +3,7 @@ version: '${project.version}'
 main: me.edstorm17.battleroyale.BattleRoyale
 api-version: '1.21'
 commands:
-  match:
+  battle:
     usage: /<command>
   items:
     usage: /<command>
@@ -11,4 +11,7 @@ commands:
     usage: /<command>
   stuff:
     usage: /<command>
-
+  i:
+    usage: /<command>
+  kit:
+    usage: /<command>
