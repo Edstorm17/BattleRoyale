@@ -20,6 +20,7 @@ public enum Item {
     SNAPFLASH(new Snapflash()),
     SERINGUE(new Seringue()),
     GAY(new Gay()),
+    GRAVITY(new GravityGlove()),
 
     FIGHTER(new BaseItem("fighter", Material.OAK_BOAT, ChatColor.RED + "Fighter")),
     BOMBER(new BaseItem("bomber", Material.ACACIA_BOAT, ChatColor.RED + "Bomber")),

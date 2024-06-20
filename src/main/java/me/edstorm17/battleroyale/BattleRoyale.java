@@ -5,6 +5,7 @@ import me.edstorm17.battleroyale.items.Item;
 import me.edstorm17.battleroyale.items.Passive;
 import me.edstorm17.battleroyale.listeners.*;
 import me.edstorm17.battleroyale.ui.GUIListener;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Arrow;
@@ -69,7 +70,7 @@ public final class BattleRoyale extends JavaPlugin {
     private void tick() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.getEquipment() != null) {
-                for (ItemStack itemStack : player.getEquipment().getArmorContents()) {
+                for (ItemStack itemStack : ArrayUtils.addAll(player.getEquipment().getArmorContents(), player.getEquipment().getItemInMainHand(), player.getEquipment().getItemInOffHand())) {
                     if (itemStack != null) {
                         Item item = Item.get(itemStack);
                         if (item != null && item.getItem() instanceof Passive passive) {

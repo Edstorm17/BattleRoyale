@@ -15,6 +15,7 @@ me\edstorm17\battleroyale\commands\StuffCommand.class
 me\edstorm17\battleroyale\ui\GUIListener.class
 me\edstorm17\battleroyale\commands\ItemsCommand.class
 me\edstorm17\battleroyale\items\weapon\Seringue.class
+me\edstorm17\battleroyale\items\weapon\GravityGlove$1$1.class
 me\edstorm17\battleroyale\items\weapon\Snapflash.class
 me\edstorm17\battleroyale\items\weapon\Seed.class
 me\edstorm17\battleroyale\listeners\HitListener.class
@@ -23,6 +24,7 @@ me\edstorm17\battleroyale\items\weapon\Puffer.class
 me\edstorm17\battleroyale\items\weapon\Raygun.class
 me\edstorm17\battleroyale\ui\BaseGUI.class
 me\edstorm17\battleroyale\BukkitUtils.class
+me\edstorm17\battleroyale\items\weapon\GravityGlove.class
 me\edstorm17\battleroyale\entities\Bomber.class
 me\edstorm17\battleroyale\BattleRoyale.class
 me\edstorm17\battleroyale\items\Item.class
@@ -34,6 +36,7 @@ me\edstorm17\battleroyale\items\Menu.class
 me\edstorm17\battleroyale\items\weapon\Stealer.class
 me\edstorm17\battleroyale\entities\Fighter.class
 me\edstorm17\battleroyale\commands\VehicleCommand.class
+me\edstorm17\battleroyale\items\weapon\GravityGlove$1.class
 me\edstorm17\battleroyale\BattleStage.class
 me\edstorm17\battleroyale\BlockUtils.class
 me\edstorm17\battleroyale\ui\ClickableItem.class

@@ -35,26 +35,13 @@ public class Stealer extends BaseItem implements Ability, Hittable {
 
     @Override
     public void hit(Player source, Player target) {
-
-
-
         if (source.getAttackCooldown() == 1) {
-            if (!modifiers.containsKey(target)) {
-                AttributeModifier modifier = new AttributeModifier(NamespacedKey.fromString(UUID.randomUUID().toString()), -1, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY);
-                target.getAttribute(Attribute.GENERIC_MAX_HEALTH).addModifier(modifier);
-
-
-                modifiers.put(target, modifier);
-            } else {
-                AttributeModifier modifier = modifiers.get(target);
-                double value = modifier.getAmount();
-                target.getAttribute(Attribute.GENERIC_MAX_HEALTH).removeModifier(modifier);
-                modifier = new AttributeModifier(NamespacedKey.fromString(UUID.randomUUID().toString()), value - 1, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY);
-                target.getAttribute(Attribute.GENERIC_MAX_HEALTH).addModifier(modifier);
-                modifiers.put(target, modifier);
-
-
-            }
+            AttributeModifier modifier = modifiers.getOrDefault(target, new AttributeModifier(NamespacedKey.fromString(UUID.randomUUID().toString()), 0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY));
+            double value = modifier.getAmount();
+            target.getAttribute(Attribute.GENERIC_MAX_HEALTH).removeModifier(modifier);
+            modifier = new AttributeModifier(NamespacedKey.fromString(UUID.randomUUID().toString()), value - 1, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY);
+            target.getAttribute(Attribute.GENERIC_MAX_HEALTH).addModifier(modifier);
+            modifiers.put(target, modifier);
         }
     }
 }
