@@ -44,3 +44,4 @@ public class Snapflash extends BaseItem implements Ability {
         cooldown.put(event.getPlayer(), System.currentTimeMillis());
     }
 }
+// si swat armour kit = on . cooldown réduit ou plus long freeze

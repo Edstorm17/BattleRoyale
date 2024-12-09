@@ -61,7 +61,7 @@ public class Raygun extends BaseItem implements Ability {
             for (Entity e : player.getWorld().getNearbyEntities(location, 1, 1, 1, entity -> !entity.equals(player) && entity instanceof LivingEntity)) {
                 ((LivingEntity) e).damage(Math.min(Math.pow(1.25, count) - 1, enhanced ? 15 : 10), player);
             }
-            player.getWorld().spawnParticle(Particle.DUST, location, 2, 0, 0, 0, new Particle.DustOptions(Color.RED, 1));
+            player.getWorld().spawnParticle(Particle.DUST, location, 2, 0, 0, 0, new Particle.DustOptions(Color.RED, 3));
         }
     }
 }

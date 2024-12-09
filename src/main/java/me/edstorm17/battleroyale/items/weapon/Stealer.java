@@ -19,6 +19,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -76,3 +77,4 @@ public class Stealer extends BaseItem implements Ability {
         cooldown.put(event.getPlayer(), System.currentTimeMillis());
     }
 }
+

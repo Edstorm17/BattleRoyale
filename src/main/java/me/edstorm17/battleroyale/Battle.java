@@ -214,7 +214,7 @@ public class Battle {
         gameWorld.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
         gameWorld.setGameRule(GameRule.KEEP_INVENTORY, true);
         gameWorld.getWorldBorder().setCenter(0.5, 0.5);
-        gameWorld.getWorldBorder().setSize(201);
+        gameWorld.getWorldBorder().setSize(300);
 
         Block def = gameWorld.getHighestBlockAt(0, 0);
         Block blue = gameWorld.getHighestBlockAt(0, -50);

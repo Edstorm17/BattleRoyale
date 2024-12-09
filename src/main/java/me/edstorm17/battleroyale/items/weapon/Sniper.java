@@ -26,6 +26,7 @@ public class Sniper extends BaseItem implements Ability {
     public void onClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
-        player.launchProjectile(Arrow.class, player.getEyeLocation().getDirection().multiply(20));
+        Arrow a = player.launchProjectile(Arrow.class, player.getEyeLocation().getDirection().multiply(10));
+        a.setShooter(player);
     }
 }
