@@ -14,12 +14,12 @@ public interface Steerable {
 
     Random random = new Random();
 
-    default void steer(float sideways, float forward, boolean jumping, boolean sneaking) {
+    default void steer(boolean forward, boolean backward, boolean jumping, boolean sneaking) {
         if (!(this instanceof EntityLiving entity)) return;
         Entity e = entity.getBukkitEntity();
         if (e.getPassengers().get(0) instanceof Player player) {
             Vector vec = player.getEyeLocation().getDirection();
-            vec.multiply(forward);
+            vec.multiply(forward ? 1 : backward ? -1 : 0);
             e.setVelocity(vec);
             Location loc = player.getEyeLocation();
             e.setRotation(loc.getYaw(), loc.getPitch());

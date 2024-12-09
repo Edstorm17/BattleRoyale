@@ -1,16 +1,18 @@
 package me.edstorm17.battleroyale.items.weapon;
 
+import me.edstorm17.battleroyale.items.Ability;
 import me.edstorm17.battleroyale.items.BaseItem;
-import me.edstorm17.battleroyale.items.Hittable;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Map;
 
-public class Seed extends BaseItem implements Hittable {
+public class Seed extends BaseItem implements Ability {
 
     public Seed() {
         super(
@@ -19,12 +21,14 @@ public class Seed extends BaseItem implements Hittable {
                 "GETME",
                 null,
                 null,
-                Map.of(Enchantment.KNOCKBACK, 10)
+                Map.of(Enchantment.KNOCKBACK, 10),
+                null,
+                false
         );
     }
 
     @Override
-    public void hit(Player source, Player target) {
-        target.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,10 , 6, false, false));
+    public void onHit(EntityDamageByEntityEvent event) {
+        ((LivingEntity) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,10 , 6, false, false));
     }
 }

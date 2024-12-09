@@ -3,6 +3,7 @@ package me.edstorm17.battleroyale.items.weapon;
 import me.edstorm17.battleroyale.BattleRoyale;
 import me.edstorm17.battleroyale.items.Ability;
 import me.edstorm17.battleroyale.items.BaseItem;
+import me.edstorm17.battleroyale.items.Item;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -23,7 +24,6 @@ public class Raygun extends BaseItem implements Ability {
                 ChatColor.DARK_RED + "Le Raygun"
         );
     }
-
 
     private static Map<Player, Long> raygunTimer = new HashMap<>();
 
@@ -47,7 +47,7 @@ public class Raygun extends BaseItem implements Ability {
                         ray(player, this.location, count);
                         if (count < 10) count++;
                     }
-                }.runTaskTimer(BattleRoyale.getInstance(), 0, 10);
+                }.runTaskTimer(BattleRoyale.getInstance(), 0, 5);
             }
             raygunTimer.put(player, System.currentTimeMillis());
         }
@@ -55,10 +55,11 @@ public class Raygun extends BaseItem implements Ability {
     }
 
     public void ray(Player player, Location location, int count) {
+        boolean enhanced = Item.isWearingAll(player, Item.SHOOTER_HELMET, Item.SHOOTER_CHESTPLATE, Item.SHOOTER_LEGGING, Item.SHOOTER_BOOTS);
         for (int i = 0; i < 50; i++) {
             location.add(location.getDirection());
             for (Entity e : player.getWorld().getNearbyEntities(location, 1, 1, 1, entity -> !entity.equals(player) && entity instanceof LivingEntity)) {
-                ((LivingEntity) e).damage(count);
+                ((LivingEntity) e).damage(Math.min(Math.pow(1.25, count) - 1, enhanced ? 15 : 10), player);
             }
             player.getWorld().spawnParticle(Particle.DUST, location, 2, 0, 0, 0, new Particle.DustOptions(Color.RED, 1));
         }

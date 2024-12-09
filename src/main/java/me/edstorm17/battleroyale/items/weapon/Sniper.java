@@ -16,7 +16,9 @@ public class Sniper extends BaseItem implements Ability {
                 "Le Sniper",
                 null,
                 null,
-                null
+                null,
+                null,
+                false
         );
     }
 

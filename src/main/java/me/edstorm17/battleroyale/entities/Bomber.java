@@ -7,17 +7,12 @@ import org.bukkit.entity.TNTPrimed;
 public class Bomber extends FlyingBoat {
 
     public Bomber(Location location) {
-        super(location, EnumBoatType.e);
+        super(location);
     }
 
     @Override
     public void shoot(Player player) {
         TNTPrimed tnt = player.getWorld().spawn(player.getLocation().subtract(0, 1, 0), TNTPrimed.class);
         tnt.setFuseTicks(100);
-    }
-
-    @Override
-    public EnumBoatType d() {
-        return EnumBoatType.e;
     }
 }

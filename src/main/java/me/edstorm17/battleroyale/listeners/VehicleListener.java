@@ -40,8 +40,8 @@ public class VehicleListener implements Listener {
     public void onBreak(VehicleDestroyEvent event) {
         if (BukkitUtils.getHandle(event.getVehicle()) instanceof FlyingBoat fb) {
             event.setCancelled(true);
-            event.getVehicle().getWorld().dropItem(event.getVehicle().getLocation(), Item.valueOf(fb.getClass().getSimpleName().toUpperCase()).getItem().toItemStack());
-            event.getVehicle().remove();
+//            event.getVehicle().getWorld().dropItem(event.getVehicle().getLocation(), Item.valueOf(fb.getClass().getSimpleName().toUpperCase()).getItem().toItemStack());
+//            event.getVehicle().remove();
         }
     }
 

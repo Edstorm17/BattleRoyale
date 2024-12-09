@@ -28,7 +28,9 @@ public class Seringue extends BaseItem implements Ability {
                 "BOOST",
                 List.of("la légende dit que meme ta mere peut pas aller aussi vite"),
                 null,
-                null
+                null,
+                null,
+                false
         );
     }
 
@@ -40,11 +42,13 @@ public class Seringue extends BaseItem implements Ability {
         if ((event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) && System.currentTimeMillis() - timeout.getOrDefault(event.getPlayer(), 0L) >= 60 * 1000) {
             event.getPlayer().playSound(event.getPlayer(), Sound.ENTITY_GENERIC_DRINK, 1, 1);
 
-            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 1800, 2 , false, false));
-            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 1800, 2, false, false));
-            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 1800, 10, false, false));
-            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 1800, 5, false, false));
-            event.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).addModifier(new AttributeModifier(NamespacedKey.fromString(UUID.randomUUID().toString()), 4d, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY));
+            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 600, 2 , false, false));
+            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 6 , false, false));
+            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 600, 2, false, false));
+            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 600, 10, false, false));
+            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 600, 5, false, false));
+            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 1200, 1, false, false));
+            event.getPlayer().getAttribute(Attribute.MAX_HEALTH).addModifier(new AttributeModifier(NamespacedKey.fromString(UUID.randomUUID().toString()), 4d, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY));
 
             timeout.put(event.getPlayer(), System.currentTimeMillis());
         }

@@ -18,10 +18,12 @@ public class Gay extends BaseItem {
                 Material.LEATHER_CHESTPLATE,
                 "le gay",
                 null,
-                Map.of(Attribute.GENERIC_MAX_HEALTH, new AttributeModifier(NamespacedKey.fromString(UUID.randomUUID().toString()), 100d, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.CHEST),
-                Attribute.GENERIC_GRAVITY, new AttributeModifier(NamespacedKey.fromString(UUID.randomUUID().toString()), 5, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.CHEST),
-                Attribute.GENERIC_ARMOR, new AttributeModifier(NamespacedKey.fromString(UUID.randomUUID().toString()), 20, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.CHEST)),
-                null
+                Map.of(Attribute.MAX_HEALTH, new AttributeModifier(NamespacedKey.fromString(UUID.randomUUID().toString()), 100d, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.CHEST),
+                Attribute.GRAVITY, new AttributeModifier(NamespacedKey.fromString(UUID.randomUUID().toString()), 5, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.CHEST),
+                Attribute.ARMOR, new AttributeModifier(NamespacedKey.fromString(UUID.randomUUID().toString()), 20, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.CHEST)),
+                null,
+                null,
+                true
         );
     }
 }

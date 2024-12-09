@@ -1,5 +1,8 @@
 package me.edstorm17.battleroyale.listeners;
 
+import me.edstorm17.battleroyale.BukkitUtils;
+import me.edstorm17.battleroyale.items.weapon.Minigun.CustomProjectile;
+import me.edstorm17.battleroyale.items.weapon.Minigun.MinigunFireball;
 import org.bukkit.Location;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -12,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class HitListener implements Listener {
+public class ProjectileListener implements Listener {
 
     public static final List<Arrow> arrows = new ArrayList<>();
 
@@ -32,6 +35,10 @@ public class HitListener implements Listener {
             for (Entity entity : entities) {
                 ((LivingEntity) entity).damage(10d);
             }
+        } else if (BukkitUtils.getHandle(event.getEntity()) instanceof CustomProjectile customProjectile && event.getHitEntity() instanceof LivingEntity livingEntity) {
+            livingEntity.damage(customProjectile.getDamage(), (Entity) event.getEntity().getShooter());
         }
     }
+
+
 }

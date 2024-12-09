@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 
 public class BlockUtils {
 
@@ -42,9 +43,24 @@ public class BlockUtils {
             }
         }
 
-		int volume = (int) Math.abs(endX - startX + 1) * Math.abs(endY - startY + 1) * Math.abs(endZ - startZ + 1);
+		int volume = Math.abs(endX - startX + 1) * Math.abs(endY - startY + 1) * Math.abs(endZ - startZ + 1);
         Bukkit.getLogger().info("Replaced " + volume + " blocks.");
         return from;
+    }
+
+    public static void set(World world, int startX, int startY, int startZ, int endX, int endY, int endZ, Set<Material> filterOut, Material with) {
+        for (int x = startX; x <= endX; x++) {
+            for (int y = startY; y <= endY; y++) {
+                for (int z = startZ; z <= endZ; z++) {
+                    Block block = world.getBlockAt(x, y, z);
+                    if (filterOut.contains(block.getType())) continue;
+                    block.setType(with);
+                }
+            }
+        }
+
+        int volume = Math.abs(endX - startX + 1) * Math.abs(endY - startY + 1) * Math.abs(endZ - startZ + 1);
+        Bukkit.getLogger().info("Set " + volume + " blocks.");
     }
 
 }

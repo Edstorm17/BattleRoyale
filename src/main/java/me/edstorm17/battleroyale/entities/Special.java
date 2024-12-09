@@ -8,7 +8,7 @@ import net.minecraft.world.entity.animal.EntitySheep;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_21_R1.util.CraftChatMessage;
+import org.bukkit.craftbukkit.v1_21_R3.util.CraftChatMessage;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 public class Special extends EntitySheep implements Vehicle, Steerable {
 
     public Special(Location location) {
-        super(EntityTypes.aJ, BukkitUtils.getHandle(location.getWorld()));
+        super(EntityTypes.ba, BukkitUtils.getHandle(location.getWorld()));
         BukkitUtils.getHandle(location.getWorld()).b(this);
         this.f(true);
         this.b(CraftChatMessage.fromStringOrNull("jeb_"));

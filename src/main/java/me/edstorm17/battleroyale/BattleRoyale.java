@@ -7,6 +7,7 @@ import me.edstorm17.battleroyale.listeners.*;
 import me.edstorm17.battleroyale.ui.GUIListener;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -14,6 +15,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public final class BattleRoyale extends JavaPlugin {
 
@@ -32,13 +36,14 @@ public final class BattleRoyale extends JavaPlugin {
         getCommand("stuff").setExecutor(new StuffCommand());
         getCommand("i").setExecutor(new ItemCommand());
         getCommand("kit").setExecutor(new KitCommand());
-        getServer().getPluginManager().registerEvents(new ClickListener(), this);
-        getServer().getPluginManager().registerEvents(new HitListener(), this);
+        getServer().getPluginManager().registerEvents(new AbilityListener(), this);
+        getServer().getPluginManager().registerEvents(new ProjectileListener(), this);
         getServer().getPluginManager().registerEvents(new VehicleListener(), this);
         getServer().getPluginManager().registerEvents(new Injector(), this);
         getServer().getPluginManager().registerEvents(new InventoryListener(), this);
         getServer().getPluginManager().registerEvents(new RespawnListener(), this);
         getServer().getPluginManager().registerEvents(new GUIListener(), this);
+        getServer().getPluginManager().registerEvents(new MiscListener(), this);
 
         Bukkit.getScheduler().runTaskTimer(this, this::second, 0, 20);
         Bukkit.getScheduler().runTaskTimer(this, this::tick, 0, 1);
@@ -46,6 +51,7 @@ public final class BattleRoyale extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             Injector.injectPlayer(player);
         }
+        Battle.reload();
     }
 
     @Override
@@ -67,6 +73,7 @@ public final class BattleRoyale extends JavaPlugin {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void tick() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.getEquipment() != null) {
@@ -79,6 +86,11 @@ public final class BattleRoyale extends JavaPlugin {
                     }
                 }
             }
+            if (player.isOnGround()) {
+                SpecialAbilities.available.put(player, true);
+            }
+            player.setAllowFlight(Item.isWearingAtLeast(player, Item.GOD_BOOTS) || player.getGameMode() == GameMode.CREATIVE);
         }
     }
+
 }

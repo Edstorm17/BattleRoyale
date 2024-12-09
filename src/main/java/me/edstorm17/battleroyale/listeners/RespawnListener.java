@@ -31,8 +31,8 @@ public class RespawnListener implements Listener {
                 event.setRespawnLocation(Bukkit.getWorld("world").getSpawnLocation());
             }
         }
-        for (AttributeModifier modifier : event.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getModifiers()) {
-            event.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).removeModifier(modifier);
+        for (AttributeModifier modifier : event.getPlayer().getAttribute(Attribute.MAX_HEALTH).getModifiers()) {
+            event.getPlayer().getAttribute(Attribute.MAX_HEALTH).removeModifier(modifier);
         }
     }
 

@@ -16,7 +16,9 @@ public class Puffer extends BaseItem implements Ability {
                 "Le Puffer",
                 null,
                 null,
-                null
+                null,
+                null,
+                false
         );
     }
 
@@ -26,7 +28,8 @@ public class Puffer extends BaseItem implements Ability {
         Vector vector = player.getEyeLocation().getDirection().multiply(10);
 
         for (int i = 0; i < 12; i++) {
-            player.launchProjectile(Arrow.class, vector.rotateAroundY(30));
+            Arrow a = player.launchProjectile(Arrow.class, vector.rotateAroundY(30));
+            a.setShooter(player);
         }
     }
 }

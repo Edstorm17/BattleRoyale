@@ -1,6 +1,7 @@
 package me.edstorm17.battleroyale.items;
 
 import me.edstorm17.battleroyale.BattleRoyale;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -9,6 +10,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import javax.annotation.Nonnull;
@@ -28,7 +30,7 @@ public class BaseItem {
             @Nonnull Material material,
             @Nonnull String name
     ) {
-        this(ID, material, name, null, null, null);
+        this(ID, material, name, null, null, null, null, false);
     }
 
     public BaseItem(
@@ -37,14 +39,17 @@ public class BaseItem {
             @Nonnull String name,
             @Nullable List<String> lore,
             @Nullable Map<Attribute, AttributeModifier> attributes,
-            @Nullable Map<Enchantment, Integer> enchants
-    ) {
+            @Nullable Map<Enchantment, Integer> enchants,
+            @Nullable Color color,
+            boolean unbreakable
+            ) {
 
         itemStack = new ItemStack(material);
         ItemMeta meta = itemStack.getItemMeta();
         assert meta != null;
         meta.setDisplayName(name);
         meta.setLore(lore);
+        meta.setUnbreakable(unbreakable);
 
         if (attributes != null) {
             for (Entry<Attribute, AttributeModifier> attribute : attributes.entrySet()) {
@@ -56,6 +61,11 @@ public class BaseItem {
             for (Entry<Enchantment, Integer> enchant : enchants.entrySet()) {
                 meta.addEnchant(enchant.getKey(), enchant.getValue(), true);
             }
+        }
+
+        if (color != null) {
+            LeatherArmorMeta meta1 = (LeatherArmorMeta) meta;
+            meta1.setColor(color);
         }
 
         meta.getPersistentDataContainer().set(idKey, PersistentDataType.STRING, ID);

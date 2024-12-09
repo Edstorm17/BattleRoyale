@@ -1,6 +1,5 @@
 package me.edstorm17.battleroyale.ui.guis;
 
-import me.edstorm17.battleroyale.items.BaseItem;
 import me.edstorm17.battleroyale.items.Item;
 import me.edstorm17.battleroyale.items.ItemBuilder;
 import me.edstorm17.battleroyale.ui.BaseGUI;
@@ -11,7 +10,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class KitGUI extends BaseGUI {
 
@@ -42,9 +40,24 @@ public class KitGUI extends BaseGUI {
 
 
         }));
-        setNextItem(new ClickableItem(new ItemStack(Material.LAVA_BUCKET), (p) -> {
-            p.getInventory().clear();
-            p.getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE));
+        setNextItem(new ClickableItem(new ItemStack(Material.NETHERITE_CHESTPLATE), (p) -> {
+            p.getInventory().setHelmet(Item.SWAT_HELMET.getItem().toItemStack());
+            p.getInventory().setChestplate(Item.SWAT_ARMOR.getItem().toItemStack());
+            p.getInventory().setLeggings(Item.SWAT_LEGGING.getItem().toItemStack());
+            p.getInventory().setBoots(Item.SWAT_BOOTS.getItem().toItemStack());
+            p.getInventory().addItem(new ItemStack(Item.STEALER.getItem().toItemStack()));
+            p.getInventory().addItem(new ItemStack(Item.SERINGUE.getItem().toItemStack()));
+            p.getInventory().setItemInOffHand((new ItemStack(Item.GRAPPLING_HOOK.getItem().toItemStack())));
+//            p.getInventory().setItem(Item.SNAPFLASH, 1);
+
+//           p.getInventory().add(new Itt
+
+        }));
+        setNextItem(new ClickableItem(new ItemStack(Material.SLIME_BALL), (p) -> {
+            p.getInventory().setHelmet((Item.POT.getItem().toItemStack()));
+            p.getInventory().setBoots((Item.NIKE.getItem().toItemStack()));
+            p.getInventory().setLeggings((Item.DRONES.getItem().toItemStack()));
+            p.getInventory().setChestplate((Item.SAMOURAI.getItem().toItemStack()));
 
         }));
         setNextItem(new ClickableItem(new ItemStack(Material.LAVA_BUCKET), (p) -> {

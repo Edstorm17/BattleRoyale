@@ -10,6 +10,8 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.*;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -74,6 +76,7 @@ public class Battle {
             Battle.getActive().exit();
         }
 
+        System.out.println(this);
         active = this;
         createWorld();
 
@@ -92,7 +95,7 @@ public class Battle {
                 }
             }
             player.setScoreboard(scoreboard);
-            clearModifiers(player, Attribute.GENERIC_MAX_HEALTH);
+            clearModifiers(player, Attribute.MAX_HEALTH);
         }
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
@@ -122,7 +125,7 @@ public class Battle {
             Bukkit.unloadWorld(gameWorld, true);
         }
 
-        File folder = new File(Bukkit.getWorldContainer() + "/" + worldName);
+        File folder = new File(Bukkit.getWorldContainer(), worldName);
         deleteDirectory(folder);
 
         System.out.println("Deleted old world.");
@@ -175,7 +178,7 @@ public class Battle {
     }
 
     private void shrink() {
-        gameWorld.getWorldBorder().setSize(21, TimeUnit.MINUTES, 5);
+        gameWorld.getWorldBorder().setSize(41, TimeUnit.MINUTES, 5);
     }
 
     private void createWorld() {
@@ -193,7 +196,7 @@ public class Battle {
                 Bukkit.unloadWorld(gameWorld, true);
             }
 
-            File folder = new File(Bukkit.getWorldContainer() + "/" + worldName);
+            File folder = new File(Bukkit.getWorldContainer(), worldName);
             deleteDirectory(folder);
 
             System.out.println("Deleted old world.");
@@ -209,6 +212,7 @@ public class Battle {
         assert gameWorld != null;
         gameWorld.setGameRule(GameRule.DO_MOB_SPAWNING, false);
         gameWorld.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+        gameWorld.setGameRule(GameRule.KEEP_INVENTORY, true);
         gameWorld.getWorldBorder().setCenter(0.5, 0.5);
         gameWorld.getWorldBorder().setSize(201);
 
@@ -244,6 +248,14 @@ public class Battle {
     public static void clearModifiers(Player player, Attribute attribute) {
         for (AttributeModifier modifier : player.getAttribute(attribute).getModifiers()) {
             player.getAttribute(attribute).removeModifier(modifier);
+        }
+    }
+
+    public static void reload() {
+        System.out.println("Reloading battle...");
+        Path folder = new File(Bukkit.getWorldContainer(), worldName).toPath();
+        if (Files.exists(folder)) {
+            new Battle(BattleType.SOLO, WorldType.NORMAL, 0).start();
         }
     }
 

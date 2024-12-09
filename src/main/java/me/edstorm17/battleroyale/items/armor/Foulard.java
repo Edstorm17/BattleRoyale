@@ -10,7 +10,6 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlotGroup;
 
 import java.util.HashMap;
@@ -27,8 +26,10 @@ public class Foulard extends BaseItem implements Passive {
                 Material.RED_CARPET,
                 ChatColor.LIGHT_PURPLE + "Le Foulard",
                 List.of(ChatColor.DARK_GRAY + "À qui appartenait-il?"),
-                Map.of(Attribute.GENERIC_MAX_HEALTH, new AttributeModifier(NamespacedKey.fromString(UUID.randomUUID().toString()), 10d, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.HEAD)),
-                null
+                Map.of(Attribute.MAX_HEALTH, new AttributeModifier(NamespacedKey.fromString(UUID.randomUUID().toString()), 10d, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.HEAD)),
+                null,
+                null,
+                false
         );
     }
 
@@ -44,7 +45,7 @@ public class Foulard extends BaseItem implements Passive {
                     double healthSet = 1;
                     if (livingEntity.getHealth() < 2) healthSet = livingEntity.getHealth() / 2;
                     livingEntity.damage(2);
-                    player.setHealth(Math.min(player.getHealth() + healthSet, player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()));
+                    player.setHealth(Math.min(player.getHealth() + healthSet, player.getAttribute(Attribute.MAX_HEALTH).getValue()));
                 }
             }
             count = 0;
