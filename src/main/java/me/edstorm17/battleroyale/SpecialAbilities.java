@@ -124,7 +124,7 @@ public final class SpecialAbilities {
         if (timer % 5 == 0) {
             if (!Item.isWearingAll(player, Item.SHOOTER_HELMET, Item.SHOOTER_LEGGING, Item.SHOOTER_BOOTS, Item.SHOOTER_CHESTPLATE))
                 return;
-            if (!spacePressed.get(player)) return;
+            if (!spacePressed.getOrDefault(player, false)) return;
             long time = System.currentTimeMillis();
             long fuelRemaining = jetpackFuel.computeIfAbsent(player, p -> time + MAX_FUEL) - time;
             if (fuelRemaining <= 0) {
