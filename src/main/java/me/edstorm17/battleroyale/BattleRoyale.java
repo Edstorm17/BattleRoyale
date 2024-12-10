@@ -89,6 +89,7 @@ public final class BattleRoyale extends JavaPlugin {
             if (player.isOnGround()) {
                 SpecialAbilities.available.put(player, true);
             }
+            SpecialAbilities.jetpack(player);
             player.setAllowFlight(Item.isWearingAtLeast(player, Item.GOD_BOOTS) || player.getGameMode() == GameMode.CREATIVE);
         }
     }

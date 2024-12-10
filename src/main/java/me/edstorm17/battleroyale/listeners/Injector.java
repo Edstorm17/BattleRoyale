@@ -73,6 +73,7 @@ public class Injector implements Listener {
         return manager.n;
     }
 
+    @SuppressWarnings("deprecation")
     public static boolean handlePacketReading(ChannelHandlerContext ctx, Object packet) {
         if (packet instanceof PacketPlayInSteerVehicle packetPlayInSteerVehicle) {
             Player player = Bukkit.getPlayer(ctx.name());
@@ -83,7 +84,10 @@ public class Injector implements Listener {
             if (player.getVehicle() != null && BukkitUtils.getHandle(player.getVehicle()) instanceof Steerable steerable) {
                 steerable.steer(packetPlayInSteerVehicle.b().a(), packetPlayInSteerVehicle.b().b(), packetPlayInSteerVehicle.b().e(), packetPlayInSteerVehicle.b().f());
             }
-            if (packetPlayInSteerVehicle.b().e()) SpecialAbilities.dash(player);
+            if (packetPlayInSteerVehicle.b().e()) {
+                SpecialAbilities.dash(player);
+            }
+            SpecialAbilities.spacePressed.put(player, packetPlayInSteerVehicle.b().e() && !player.isOnGround());
             if (packetPlayInSteerVehicle.b().f()) SpecialAbilities.shadowFury(player);
         }
 

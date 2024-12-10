@@ -34,7 +34,7 @@ public class AbilityListener implements Listener {
     public void onHit(EntityDamageByEntityEvent event) {
         Player player;
         if (event.getDamager() instanceof Player) player = (Player) event.getDamager();
-        else if (((Projectile) event.getDamager()).getShooter() instanceof Player) player = (Player) ((Projectile) event.getDamager()).getShooter();
+        else if (event.getDamager() instanceof Projectile projectile && projectile.getShooter() instanceof Player) player = (Player) projectile.getShooter();
         else return;
         for (Item item : Item.getEquipmentAsCustomItems(player)) {
             if (item.getItem() instanceof Ability ability) {
