@@ -2,7 +2,6 @@ package me.edstorm17.battleroyale.listeners;
 
 import me.edstorm17.battleroyale.BukkitUtils;
 import me.edstorm17.battleroyale.items.weapon.Minigun.CustomProjectile;
-import me.edstorm17.battleroyale.items.weapon.Minigun.MinigunFireball;
 import org.bukkit.Location;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;

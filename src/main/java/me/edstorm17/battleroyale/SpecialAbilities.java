@@ -13,13 +13,19 @@ import org.bukkit.Particle.DustOptions;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.damage.DamageSource;
+import org.bukkit.damage.DamageType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
 import javax.annotation.Nullable;
@@ -137,7 +143,8 @@ public final class SpecialAbilities {
             }
             player.setVelocity(new Vector(0, 0.5, 0));
             player.setFallDistance(0);
-            player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SHOOT, 1, (float) fuelRemaining / 5000f * 0.5f + 0.5f);
+            player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WITHER_SHOOT, 1, (float) fuelRemaining / 5000f * 0.5f + 0.5f);
+            player.getWorld().spawnParticle(Particle.DUST, player.getLocation(), 5, 0.5, 0, 0.5, new DustOptions(Color.WHITE, 1));
         }
         timer++;
     }
@@ -266,6 +273,81 @@ public final class SpecialAbilities {
             affectedPlayers.removeAll(playersAffected.get(player));
             player.setWorldBorder(border);
         }, 600);
+    }
+
+    private static final Map<Player, Long> tsunamiFirstPress = new ConcurrentHashMap<>();
+    private static final Map<Player, Long> tsunamiSecondPress = new ConcurrentHashMap<>();
+    private static final Map<Player, Long> tsunamiCooldown = new ConcurrentHashMap<>();
+
+    public static void naturalDisaster(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
+        Player player = event.getPlayer();
+        if (!player.isSneaking()) return;
+        if (!Item.isWearingAll(player, Item.SWAT_BOOTS, Item.SWAT_LEGGING, Item.SWAT_ARMOR, Item.SWAT_HELMET)) return;
+        long time = System.currentTimeMillis();
+        if (
+                time - tsunamiFirstPress.getOrDefault(player, 0L) < 1000 &&
+                (tsunamiFirstPress.getOrDefault(player, 0L) < tsunamiSecondPress.getOrDefault(player, 0L)) &&
+                (tsunamiSecondPress.getOrDefault(player, 0L) < time) &&
+                time - tsunamiCooldown.getOrDefault(player, 0L) >= 120000
+        ) {
+            tsunami(player);
+            tsunamiCooldown.put(player, time);
+        } else if (
+                time - tsunamiFirstPress.getOrDefault(player, 0L) < 500 &&
+                time - tsunamiSecondPress.getOrDefault(player, 0L) >= 500
+        ) {
+            tsunamiSecondPress.put(player, time);
+        } else {
+            tsunamiFirstPress.put(player, time);
+        }
+    }
+
+    public static void tsunami(Player player) {
+        player.getNearbyEntities(100, 500, 100).forEach(entity -> {
+            if (entity instanceof Player target) {
+                target.sendTitle("§l§9BEWARE", "§l§9TSUNAMI", 5, 60, 5);
+            }
+        });
+        player.sendTitle("§l§9BEWARE", "§l§9TSUNAMI", 5, 60, 5);
+        MiscListener.waterEnabled = false;
+        Location location = player.getLocation();
+
+        new BukkitRunnable() {
+            final int startX = location.getBlockX() - 100;
+            final int endX = location.getBlockX() + 100;
+            final int startZ = location.getBlockZ() - 100;
+            int z = startZ;
+            final int endZ = location.getBlockZ() + 100;
+
+            final List<Map<Location, BlockData>> blocks = new ArrayList<>();
+
+            @Override
+            public void run() {
+                if (z >= endZ) {
+                    cancel();
+                    for (Map<Location, BlockData> map : blocks) {
+                        BlockUtils.fill(map);
+                    }
+                    MiscListener.waterEnabled = true;
+
+                    return;
+                }
+
+                location.getWorld().playSound(location, Sound.BLOCK_BUBBLE_COLUMN_WHIRLPOOL_AMBIENT, 100, 0.5f);
+                location.getWorld().playSound(location, Sound.AMBIENT_UNDERWATER_LOOP, 100, 0.5f);
+                location.getWorld().playSound(location, Sound.BLOCK_WATER_AMBIENT, 100, 0.5f);
+
+                blocks.add(BlockUtils.replaceOnly(location.getWorld(), startX, -64, z, endX, 100, z + 1, Set.of(Material.AIR), Material.WATER));
+
+                location.getWorld().getNearbyEntities(new BoundingBox(startX, -64, startZ, endX, 320, z + 1), e -> e instanceof Player target && target != player).forEach(entity -> {
+                    ((LivingEntity) entity).damage(20d, DamageSource.builder(DamageType.DROWN).withCausingEntity(player).build());
+                });
+
+                z += 2;
+            }
+        }.runTaskTimer(BattleRoyale.getInstance(), 20L, 10L);
+
     }
 
 }

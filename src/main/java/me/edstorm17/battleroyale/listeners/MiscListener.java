@@ -1,13 +1,18 @@
 package me.edstorm17.battleroyale.listeners;
 
+import me.edstorm17.battleroyale.BukkitUtils;
 import me.edstorm17.battleroyale.SpecialAbilities;
+import me.edstorm17.battleroyale.SpecialAbilities.StrikeFireball;
 import me.edstorm17.battleroyale.items.Item;
 import me.edstorm17.battleroyale.items.weapon.SmokeBomb;
+import net.minecraft.server.level.EntityPlayer;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -60,13 +65,29 @@ public class MiscListener implements Listener {
     @EventHandler
     public void onClick(PlayerInteractEvent e) {
         SpecialAbilities.meteorStrike(e);
+        SpecialAbilities.naturalDisaster(e);
     }
 
     @EventHandler
     public void onHit(EntityDamageByEntityEvent e) {
         if ((e.getEntity() instanceof Player target) && (e.getDamager() instanceof Player player)) {
             SpecialAbilities.stepFury(player, target);
+        } else if (
+                e.getEntity() instanceof Player target &&
+                BukkitUtils.getHandle(e.getDamager()) instanceof StrikeFireball fireball &&
+                fireball.p() instanceof EntityPlayer entityPlayer &&
+                entityPlayer.cG().equals(target.getUniqueId())
+        ) {
+            e.setCancelled(true);
         }
+    }
+
+    public static boolean waterEnabled = true;
+
+    @EventHandler
+    public void onBlockFromTo(BlockFromToEvent event) {
+        if (event.getBlock().getType() == Material.WATER && !waterEnabled)
+            event.setCancelled(true);
     }
 
 }
