@@ -350,4 +350,22 @@ public final class SpecialAbilities {
 
     }
 
+    public static void updateBar() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            long timer = 0;
+            long currentTime = System.currentTimeMillis();
+            if (Item.isWearingAll(player, Item.POT, Item.SAMOURAI, Item.DRONES, Item.NIKE)) {
+                timer = currentTime - furyCooldown.getOrDefault(player, 0L);
+            } else if (Item.isWearingAll(player, Item.SHOOTER_HELMET, Item.SHOOTER_CHESTPLATE, Item.SHOOTER_LEGGING, Item.SHOOTER_BOOTS)) {
+                timer = currentTime - cooldown.getOrDefault(player, 0L);
+            } else if (Item.isWearingAll(player, Item.SWAT_HELMET, Item.SWAT_ARMOR, Item.SWAT_LEGGING, Item.SWAT_BOOTS)) {
+                timer = currentTime - tsunamiCooldown.getOrDefault(player, 0L);
+            }
+            timer = Math.min(timer, 120000L);
+            long timeLeft = 120000 - timer;
+            player.setLevel((int) (timeLeft / 1000L));
+            player.setExp((float) (timer / 120000L));
+        }
+    }
+
 }

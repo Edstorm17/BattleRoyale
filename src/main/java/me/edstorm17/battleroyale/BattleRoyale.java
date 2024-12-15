@@ -16,9 +16,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public final class BattleRoyale extends JavaPlugin {
 
     private static Plugin instance;
@@ -71,6 +68,7 @@ public final class BattleRoyale extends JavaPlugin {
                 if (entity instanceof Arrow arrow && arrow.isInBlock()) entity.remove();
             }
         }
+        SpecialAbilities.updateBar();
     }
 
     @SuppressWarnings("deprecation")
